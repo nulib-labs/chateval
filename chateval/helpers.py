@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
-
+from tqdm import tqdm
 
 # for development purposes. But should this just be hardcoded in the cli?
 load_dotenv('.env')
@@ -53,12 +53,10 @@ def get_answer(question, token, with_context=False):
         'ref': 'DEV-TEAM-TEST-' + str(random.random()),
         "question": question
     }
-    print(f"Asking question: {question} ")
     
     try:
         response = requests.post(url, json.dumps(body), headers=header)
         response.raise_for_status()
-        print(f"Response: {response.status_code}")
         if response.status_code != 200:
             print('Status:', response.status_code, response.reason)
             return format_error(with_context)
@@ -69,10 +67,11 @@ def get_answer(question, token, with_context=False):
         return format_error(with_context)
     
 def get_answers(questions, token, with_context=False):
+    tqdm.pandas()
     if with_context:
-       questions[['answer', 'context']] = questions['question'].apply(lambda x:get_answer(x, token, with_context))
+       questions[['answer', 'context']] = questions['question'].progress_apply(lambda x:get_answer(x, token, with_context))
     else:
-        questions['answer'] = questions['question'].apply(lambda x:get_answer(x, token, with_context))
+        questions['answer'] = questions['question'].progress_apply(lambda x:get_answer(x, token, with_context))
     print("Done")
     return questions
 
