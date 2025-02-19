@@ -4,7 +4,6 @@ import random
 import json
 import requests
 import io
-from datetime import datetime
 from dotenv import load_dotenv
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -23,6 +22,10 @@ DC_CHAT_URL = os.getenv('DC_CHAT_URL')
 
 
 def get_token():
+    """ Get a token from the DC. This requires the user
+    to be logged in to the DC. It then steals the creds 
+    from the browser """
+
     driver = webdriver.Chrome()
     driver.get("https://api.dc.library.northwestern.edu/api/v2/auth/login?goto=https://api.dc.library.northwestern.edu/api/v2/auth/token")
     token = WebDriverWait(driver, 30).until(
@@ -92,10 +95,10 @@ def get_answers(questions, token, with_context=False):
 
 
 def ask_claude(messages, system="", DEBUG=False, model_version="haiku"):
-    '''
+    """
     Send a prompt to Bedrock, and return the response.  Debug is used to see exactly what is being sent to and from Bedrock.
     messages can be an array of role/message pairs, or a string.
-    '''
+    """
     session_cache = {}
     MAX_ATTEMPTS = 3
     raw_prompt_text = str(messages)
