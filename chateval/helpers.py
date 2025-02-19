@@ -157,55 +157,37 @@ def ask_claude(messages, system="", DEBUG=False, model_version="haiku"):
     return (raw_prompt_text, results)
 
 
-def score_answers(question_answers, model):
-    '''
-    ask our LLM to score each of the generated answers.
-    '''
-    # Load the template from the package
-    with pkg_resources.open_text('chateval', 'scoring_prompt_template.txt') as file:
-        scoring_prompt_template = file.read()
-   
-    prompts = []
-    results = []
-    for question in question_answers:  
-        print(f"Scoring: {question['question']}...")
-        scoring_prompt = scoring_prompt_template.format(**question)
-        prompts.append(scoring_prompt)
-        p, s = ask_claude(scoring_prompt, model)
-        results.append([s.split(',')])
-    return results # ask_claude_threaded(prompts, model)
+def score_answer(question_answer_df, model):
+    """
+    generate a single answer from a question data frame and score it using the LLM. 
+    """
 
-def score_answer(question_answer, model):
-    '''
-    ask our LLM to score each of the generated answers.
-    '''
     # Load the template from the package
     with pkg_resources.open_text('chateval', 'scoring_prompt_template.txt') as file:
         scoring_prompt_template = file.read()
-        
-    print(f"Scoring: {question_answer['question']}...")
-    scoring_prompt = scoring_prompt_template.format(**question_answer)
+
+    scoring_prompt = scoring_prompt_template.format(**question_answer_df)
     p, s = ask_claude(scoring_prompt, model)
-    
-    return pd.Series(s.split(',')[:3], index=['oq','score','reason']) # ask_claude_threaded(prompts, model)
+
+    return pd.Series(s.split('||')[:3], index=['oq', 'score', 'reason'])
 
 
 def score_answers_df(question_answers_df, model):
-    '''
+    """ 
     ask our LLM to score each of the generated answers.
-    '''
-    # Load the template from the package
+    """
+    tqdm.pandas()
     with pkg_resources.open_text('chateval', 'scoring_prompt_template.txt') as file:
         scoring_prompt_template = file.read()
-    
+
     df = question_answers_df.copy()
-    df[['oq','score','reason']]=df.apply(lambda x: score_answer(x, model), axis=1, result_type='expand')
-    return df# ask_claude_threaded(prompts, model)
+    df[['oq', 'score', 'reason']] = df.progress_apply(
+        lambda x: score_answer(x, model), axis=1, result_type='expand')
+    return df
 
 
 def test_answers():
     return [{"question": "What is the capital of France?", "ground_truth": "Paris", "answer": "Paris"},
-            {"question": "What is the capital of Germany?", "ground_truth": "Berlin", "answer": "Berlin"},
+            {"question": "What is the capital of Germany?",
+                "ground_truth": "Berlin", "answer": "Berlin"},
             {"question": "What is the capital of Italy?", "ground_truth": "Rome", "answer": "Rome, my love"}]
-    
-
