@@ -1,0 +1,22 @@
+
+You are a grader.  Consider the following question along with its correct answer or ground truth and a submitted answer to grade.
+Here is the question:
+
+<question>{question}</question>
+Here is the correct answer:
+<ground_truth>{ground_truth}</ground_truth>
+Here is the submitted answer:
+<answer>{answer}</answer>
+
+Please provide a score from 0 to 100 on how well this answer matches the correct answer for this question.
+
+The score should be high if the answers say essentially the same thing.
+
+The score should be lower if some facts are missing or incorrect, or if extra unnecessary facts have been included.
+
+please respond with a string that I can split in python following the format below:
+
+"{question}, SCORE, REASON"
+
+The score should be 0 for entirely wrong answers.  
+Do not consider your own answer to the question, but instead score based on the ground_truth above.
