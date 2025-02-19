@@ -169,7 +169,7 @@ def score_answer(question_answer_df, model):
     scoring_prompt = scoring_prompt_template.format(**question_answer_df)
     p, s = ask_claude(scoring_prompt, model)
 
-    return pd.Series(s.split('||')[:3], index=['oq', 'score', 'reason'])
+    return pd.Series(s.split('||')[:2], index=['oq', 'score', 'reason'])
 
 
 def score_answers_df(question_answers_df, model):
@@ -181,7 +181,7 @@ def score_answers_df(question_answers_df, model):
         scoring_prompt_template = file.read()
 
     df = question_answers_df.copy()
-    df[['oq', 'score', 'reason']] = df.progress_apply(
+    df[['score', 'reason']] = df.progress_apply(
         lambda x: score_answer(x, model), axis=1, result_type='expand')
     return df
 

@@ -16,7 +16,7 @@ The score should be lower if some facts are missing or incorrect, or if extra un
 
 please respond with a string that I can split in python following the format below:
 
-{question} || SCORE || REASON
+SCORE || REASON
 
 The score should be 0 for entirely wrong answers.  
 Do not consider your own answer to the question, but instead score based on the ground_truth above.
