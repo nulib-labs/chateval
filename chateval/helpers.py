@@ -60,6 +60,7 @@ def format_error(with_context=False):
 
 
 def get_answer(question, token, with_context=False):
+
     url = DC_CHAT_URL
     header = {'Content-Type': 'application/json'}
 

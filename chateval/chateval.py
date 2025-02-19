@@ -1,14 +1,15 @@
 """chateval
 
 Usage: 
-    chateval [options] <inputcsv> <outputcsv> 
+  chateval [options] <inputcsv> <outputcsv> 
 
 Options:
 
-    -c --with-context   output optional context field
-    -e --evaluate    evaluate the answers
-    -m --model <model>  model to use [default: haiku]
-    -h --help        show this screen
+  -c --with-context   output optional context field
+  -e --evaluate       evaluate the answers
+  -m --model <model>  model to use [default: haiku]
+  -d --debug          show account and model info 
+  -h --help           show this screen
 
 Description:
 
@@ -20,7 +21,8 @@ import chateval.helpers as chat
 
 def main():
     arguments = docopt(__doc__, version='.00')
-    print(arguments)
+    if arguments['--debug']:
+        print(arguments)
     
     with_context = arguments['--with-context']
 
