@@ -8,6 +8,17 @@ A simple commandline tool to evaluate nuldc's chat-based search.
 ## install chat eval
 pip install git+https://github.com/nulib-labs/chateval.git
 ```
+## Pre-requisites 
+
+You need to setup a the chat url in your environment.
+
+Get the DC_CHAT_URL from: 
+- [staging](https://github.com/nulib/miscellany/blob/main/chat-eval/.env.staging)
+- [production](https://github.com/nulib/miscellany/blob/main/chat-eval/.env.production)
+
+```bash
+export DC_CHAT_URL={CHATURL}
+```
 
 ## Usage 
 
@@ -31,17 +42,4 @@ Takes a set of input questions with an optional "ground truth" column and output
 """
 
 ```
-
-## Setup AWS Credentials
-
-You need to setup a the chat url in your environment.
-
-Get the DC_CHAT_URL from: 
-- [staging](https://github.com/nulib/miscellany/blob/main/chat-eval/.env.staging)
-- [production](https://github.com/nulib/miscellany/blob/main/chat-eval/.env.production)
-
-```bash
-export DC_CHAT_URL={CHATURL}
-```
-
 
