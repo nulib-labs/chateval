@@ -20,9 +20,18 @@ Get the DC_CHAT_URL from:
 export DC_CHAT_URL={CHATURL}
 ```
 
+Set your aws profile and login: 
+
+```bash
+export AWS_PROFILE=your-sso-profile
+aws sso login
+```
+
 ## Usage 
 
 ```bash
+chateval --help
+
 chateval
 
 Usage: 

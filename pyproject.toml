@@ -2,7 +2,7 @@
 authors = [
     {name = "davidschober", email = "david.schober@northwestern.edu"},
 ]
-requires-python = "<4.0,>=3.13"
+requires-python = "<4.0,>=3.10"
 dependencies = [
     "pandas>=2.2.3,<3.0.0",
     "python-dotenv<2.0.0,>=1.0.1",
@@ -20,6 +20,7 @@ name = "chateval"
 version = "0.2.0"
 description = ""
 readme = "README.md"
+urls = {Homepage = "https://github.com/nulib-labs/chateval"}
 
 [project.scripts]
 chateval = "chateval.chateval:main"
