@@ -31,7 +31,9 @@ aws sso login
 
 ```bash
 chateval --help
+`
 
+"""
 chateval
 
 Usage: 
@@ -49,6 +51,5 @@ Description:
 
 Takes a set of input questions with an optional "ground truth" column and outputs a csv with answers. 
 """
-
 ```
 

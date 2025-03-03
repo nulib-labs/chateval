@@ -14,11 +14,14 @@ import time
 from botocore.config import Config
 import boto3
 import importlib.resources as pkg_resources
+from botocore.auth import SigV4Auth
+from botocore.awsrequest import AWSRequest
 
 # for development purposes. But should this just be hardcoded in the cli?
 load_dotenv('.env')
 DC_API_WHOAMI = "https://api.dc.library.northwestern.edu/api/v2/auth/whoami"
 DC_CHAT_URL = os.getenv('DC_CHAT_URL')
+session = boto3.Session()
 
 
 def get_token():
@@ -72,7 +75,11 @@ def get_answer(question, token, with_context=False):
     }
 
     try:
-        response = requests.post(url, json.dumps(body), headers=header)
+        #sign the request
+        request = AWSRequest(method='POST', url=DC_CHAT_URL, data=json.dumps(body))
+        SigV4Auth(session.get_credentials(), 'lambda', 'us-east-1').add_auth(request)
+        #send the request 
+        response = requests.post(url, json.dumps(body), dict(request.headers.items()))
         response.raise_for_status()
         if response.status_code != 200:
             print('Status:', response.status_code, response.reason)
@@ -81,6 +88,7 @@ def get_answer(question, token, with_context=False):
         return format_answer(response_json, with_context)
     except Exception as err:
         print(f"Other error occurred: {err}")
+        print(response.status_code, response.text, request.headers)
         return format_error(with_context)
 
 
