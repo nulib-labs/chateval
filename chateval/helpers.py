@@ -63,10 +63,9 @@ def format_error(with_context=False):
 
 
 def get_answer(question, token, with_context=False):
+    """ Gets an answer from the DC chatbot. """
 
     url = DC_CHAT_URL
-    header = {'Content-Type': 'application/json'}
-
     body = {
         'message': 'chat',
         'auth': token,
@@ -75,17 +74,22 @@ def get_answer(question, token, with_context=False):
     }
 
     try:
-        #sign the request
-        request = AWSRequest(method='POST', url=DC_CHAT_URL, data=json.dumps(body))
-        SigV4Auth(session.get_credentials(), 'lambda', 'us-east-1').add_auth(request)
-        #send the request 
-        response = requests.post(url, json.dumps(body), dict(request.headers.items()))
+        request = AWSRequest(
+            method='POST', url=DC_CHAT_URL, data=json.dumps(body))
+        SigV4Auth(session.get_credentials(), 'lambda',
+                  'us-east-1').add_auth(request)
+
+        headers = dict(request.headers)
+        headers['Content-Type'] = 'application/json'
+        response = requests.post(
+            url, json=json.loads(request.data), headers=headers)
+
         response.raise_for_status()
-        if response.status_code != 200:
-            print('Status:', response.status_code, response.reason)
-            return format_error(with_context)
-        response_json = response.json()
-        return format_answer(response_json, with_context)
+        if response.status_code == 200:
+            return format_answer(response.json(), with_context)
+
+            print(f'Status: {response.status_code} {response.reason}')
+
     except Exception as err:
         print(f"Other error occurred: {err}")
         print(response.status_code, response.text, request.headers)
