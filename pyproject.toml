@@ -18,13 +18,13 @@ dependencies = [
     "typer>=0.15.2",
 ]
 name = "chateval"
-version = "0.2.0"
+version = "0.3.0"
 description = ""
 readme = "README.md"
 urls = {Homepage = "https://github.com/nulib-labs/chateval"}
 
 [project.scripts]
-chateval = "chateval.chateval:cli"
+chateval = "chateval.cli:main"
 
 [build-system]
 requires = ["hatchling"]
