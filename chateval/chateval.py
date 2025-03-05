@@ -73,7 +73,7 @@ def get_answer(dc_chat_url, question, token, with_context=False):
 
     try:
         request = AWSRequest(
-            method='POST', url=dc_chat_url, data=json.dumps(body))
+            method='POST', url=url, data=json.dumps(body))
         # added to gracefully handle auth errors during test
         try:
             SigV4Auth(session.get_credentials(), 'lambda',
