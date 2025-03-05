@@ -11,8 +11,6 @@ pip install git+https://github.com/nulib-labs/chateval.git
 
 ## Pre-requisites 
 
-You need to setup a the chat url in your environment.
-
 Set your aws profile and login: 
 
 ```bash
