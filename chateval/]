@@ -1,12 +1,11 @@
 import pandas as pd
 import typer
-from typing import Annotated
 import chateval.chateval as chat
 from enum import Enum
 from rich import print
 
 
-class env(str, Enum):
+class environment(str, Enum):
     """This creates choices in the CLI"""
 
     staging = "staging"
@@ -20,28 +19,22 @@ class model(str, Enum):
     
 
 
-def cli(inputcsv: Annotated[typer.FileText, typer.Argument()],
-        outputcsv: Annotated[typer.FileTextWrite, typer.Argument()],
+def cli(inputcsv: str,
+        outputcsv: str,
         with_context: bool = False,
         evaluate: bool = False,
         model: model = model.haiku,
         debug: bool = False,
-        env: env = env.staging
+        env: environment = environment.staging
         ):
 
     chat_endpoints = {"staging": "https://pimtkveo5ev4ld3ihe4qytadxe0jvcuz.lambda-url.us-east-1.on.aws",
                       "production": "https://hdtl6p2qzfxszvbhdb7dyunuxe0dgexo.lambda-url.us-east-1.on.aws"}
 
-    dc_chat_url = chat_endpoints.get(env)
+    dc_chat_url = chat_endpoints.get(environment)
     if debug:
-        print(f"[bold yellow]Using {env} endpoint[/bold yellow]")
-        print(f"[bold yellow]Endpoint: {dc_chat_url}[/bold yellow]")
-        print(f"[bold yellow]Input CSV: {inputcsv}[/bold yellow]")
-        print(f"[bold yellow]Output CSV: {outputcsv}[/bold yellow]")
-        print(f"[bold yellow]With Context: {with_context}[/bold yellow]")
-        print(f"[bold yellow]Evaluate: {evaluate}[/bold yellow]")
-        print(f"[bold yellow]Model: {chat_endpoints}[/bold yellow]")
-         
+        print(arguments)
+
     token = chat.get_token()
 
     print(chat.confirm_login(token))
@@ -52,10 +45,9 @@ def cli(inputcsv: Annotated[typer.FileText, typer.Argument()],
     chat.get_answers(dc_chat_url, questions, token, with_context)
     if evaluate:
         print(f"[bold green]Evaluating answers with {model}[/bold green]")
-        questions = chat.score_answers_df(questions, model)
-        
-    print(f"[bold green]Writing answers to output {outputcsv.name}[/bold green]")
-    questions.to_csv(outputcsv, index=False)
+        chat.score_answers_df(questions, model).to_csv(outputcsv, index=False)
+    else:
+        questions.to_csv(outputcsv, index=False)
 
 
 def main():
