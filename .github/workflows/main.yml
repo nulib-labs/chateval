@@ -1,6 +1,6 @@
 name: run_tests
-on: pull_request
-  # Allows you to run this workflow manually from the Actions tab
+on:
+  pull_request:
   workflow_dispatch:
 
 jobs:
